@@ -1,5 +1,6 @@
 from seleniumwire import webdriver
 from time import sleep
+from selenium.common.exceptions import NoSuchElementException
 class Actions:
     time=300
     def __init__(self,driver:webdriver.Chrome):
@@ -17,41 +18,26 @@ class Actions:
     
     def printEndpoint(self):
         self.driver.wait_for_request('recs/core')
-        
-    
 
+    def handleMybeLater(self):
+        self.driver.find_element(by='xpath', value='//button/span[text()="Maybe Later"] | //button/span[text()="Not interested"] | //button/span[text()="No Thanks"]').click()
+
+        
 
     
     def login(self, phoneNumber:str):
         self.driver.find_element(by='xpath',value='//div[text()="Log in"]').click()
-        # self.driver.find_element(by='xpath',value='//div[contains(text(),"Facebook")]').click()
-        # self.driver.find_element(by='css_selector',value='input[name="phone_number"]').click()
-        
-        '''
-        # switch to login popup
-        self.driver.switch_to_window(self.driver.window_handles[1])
-
-        email_in = self.driver.find_element_by_xpath('//*[@id="email"]')
-        email_in.send_keys(username)
-
-        pw_in = self.driver.find_element_by_xpath('//*[@id="pass"]')
-        pw_in.send_keys(password)
-
-        self.driver.find_element(by='xpath',value='//input[@name="login"]').click()
-
-        self.driver.switch_to_window(base_window)
-
-        popup_1 = self.driver.find_element_by_xpath('//*[@id="modal-manager"]/div/div/div/div/div[3]/button[1]')
-        popup_1.click()
-
-        popup_2 = self.driver.find_element_by_xpath('//*[@id="modal-manager"]/div/div/div/div/div[3]/button[1]')
-        popup_2.click()
-        '''
     def wait(self):
-        while((self.driver.current_url!='https://tinder.com/app/recs')):
+        while(self.isPresent('//button//span[text()="Like"]')!=True):
             sleep(5)
         
 
     def click(self,elem):
         self.driver.execute_script("arguments[0].click();",elem) 
           
+    def isPresent(self,xpath):
+        try:
+            self.driver.find_element(by='xpath',value=xpath)
+        except NoSuchElementException:
+                return False
+        return True      

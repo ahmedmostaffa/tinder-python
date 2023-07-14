@@ -6,25 +6,26 @@ options = webdriver.ChromeOptions()
 options.add_argument("--allow-geolocation") 
 options.add_argument('--disable-infobars')
 options.add_argument('--disable-notifications')
-
+options.add_experimental_option("debuggerAddress", "localhost:9222")
 driver = webdriver.Chrome()
 
 driver.get('https://tinder.com/app/matches')
-# time.sleep(100)
 driver.implicitly_wait(30)
-
 action=Actions(driver);
-action.login("d")
+number_of_swipes=20
 
-action.like()
-action.nope()
- 
+for i in number_of_swipes:
+    try:
+        action.like()
+        driver.wait_for_request('recs/core?locale=en')
+        for request in driver.requests:
+            if request.url == 'https://api.gotinder.com/v2/recs/core?locale=en':
+                print("reuqets have been found with " + request.url)
+                print(request.response.body)
+            del driver.requests       
+    except:
+        action.handleMybeLater()
+
 # Access requests list via the `requests` attribute
-for request in driver.requests:
-    if request.response:
-        print(
-            request.response.status_code,
-            request.response.headers['Content-Type']
-        )
-
+    
         
