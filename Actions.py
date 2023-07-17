@@ -7,9 +7,12 @@ class Actions:
         self.driver=driver
 
     def like(self):
-        self.wait()
-        like_button = self.driver.find_element(by='xpath', value='//button//span[text()="Like"]')
-        self.click(like_button);
+        # click like n times to be appeared
+        self.driver.find_element(by='xpath', value='//button//span[text()="Like"]').click()
+        sleep(4)
+        self.nope()
+        
+    
 
     def nope(self):
         self.wait()
